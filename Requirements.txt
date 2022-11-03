@@ -1,0 +1,6 @@
+aredis_om
+opendatasets
+pickle
+SentenceTransformer
+json
+streamlit

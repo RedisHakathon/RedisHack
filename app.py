@@ -22,7 +22,7 @@ with st.sidebar:
 
 if selected == "Paper Recommendation":
     st.markdown(
-        """<h2 style='text-align: center; color: #EA047E;font-size:40px;margin-top:-50px;'>ArXiv Dataset Hackathon</h2>""",
+        """<h2 style='text-align: center; color: #EA047E;font-size:40px;margin-top:-50px;'>Paper Recommendation</h2>""",
         unsafe_allow_html=True,
     )
     st.markdown(
@@ -54,11 +54,11 @@ if selected == "Paper Recommendation":
 
 if selected == "Question & Answering":
     st.markdown(
-        """<h2 style='text-align: center; color: purple;font-size:60px;margin-top:-50px;'>Our Project Holistic View</h2>""",
+        """<h2 style='text-align: center; color: purple;font-size:40px;margin-top:-50px;'>Question & Answering</h2>""",
         unsafe_allow_html=True,
     )
 if selected == "Topic Identification":
     st.markdown(
-        """<h2 style='text-align: center; color: purple;font-size:60px;margin-top:-50px;'>Meet Our Amazing Team</h2>""",
+        """<h2 style='text-align: center; color: purple;font-size:40px;margin-top:-50px;'>Topic Identification</h2>""",
         unsafe_allow_html=True,
     )

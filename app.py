@@ -13,14 +13,14 @@ from redis.commands.search.result import Result
 with st.sidebar:
     selected = option_menu(
         menu_title="Main Menu",  # required
-        options=["Home", "Project Overview", "Meet The Team"],  # required
+        options=["Paper Recommendation", "Question & Answering", "Topic Identification"],  # required
         icons=["house", "diagram-2", "people"],  # optional
         menu_icon="cast",  # optional
         default_index=0,  # optional
     )
 
 
-if selected == "Home":
+if selected == "Paper Recommendation":
     st.markdown(
         """<h2 style='text-align: center; color: #EA047E;font-size:40px;margin-top:-50px;'>ArXiv Dataset Hackathon</h2>""",
         unsafe_allow_html=True,
@@ -52,12 +52,12 @@ if selected == "Home":
             st.success(results)
 
 
-if selected == "Project Design":
+if selected == "Question & Answering":
     st.markdown(
         """<h2 style='text-align: center; color: purple;font-size:60px;margin-top:-50px;'>Our Project Holistic View</h2>""",
         unsafe_allow_html=True,
     )
-if selected == "Meet The Team":
+if selected == "Topic Identification":
     st.markdown(
         """<h2 style='text-align: center; color: purple;font-size:60px;margin-top:-50px;'>Meet Our Amazing Team</h2>""",
         unsafe_allow_html=True,

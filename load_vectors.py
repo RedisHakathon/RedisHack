@@ -30,7 +30,7 @@ async def load_vectors(n, redis_conn, *papers):
 
 async def load_all_data():
     redis_conn = redis.from_url(config.REDIS_URL)
-    if await redis_conn.dbsize() > 5000000000:
+    if await redis_conn.dbsize() > 500:
         print("Papers already loaded")
     else:
         print("Loading papers into Redis")

@@ -1,4 +1,4 @@
-aredis_om
+redis
 opendatasets
 pickle
 SentenceTransformer

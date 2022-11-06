@@ -59,7 +59,7 @@ if selected == "Topic Identification":
     )
     model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
     redis_conn = redis.from_url(config.REDIS_URL)
-    topK = 5
+    topK = 1
 
     Search_query = st.text_input("Enter a text below to Identify which Schoarly Topic it Falls under")
 

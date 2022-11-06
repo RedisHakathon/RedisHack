@@ -19,6 +19,17 @@ with st.sidebar:
 
 REDIS_URL = f"redis://:{st.secrets.redis.REDIS_PASSWORD}@{st.secrets.redis.REDIS_HOST}:{st.secrets.redis.REDIS_PORT}/{st.secrets.redis.REDIS_DB}"
 INDEX_NAME = "index"
+model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
+redis_conn = redis.from_url(REDIS_URL)
+
+def vector_query(search_type,number_of_results) -> Query:
+    base_query = f'*=>[{search_type} {number_of_results} @vector $vec_param AS vector_score]'
+    return Query(base_query)\
+        .sort_by("vector_score")\
+        .paging(0, number_of_results)\
+        .return_fields("title", "categories", "abstract")\
+        .dialect(2)
+
 @st.cache(allow_output_mutation=True)
 def load_qa_model():
     model = pipeline("question-answering")
@@ -35,17 +46,12 @@ if selected == "Paper Recommendation":
         unsafe_allow_html=True,
     )
 
-    model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
-    redis_conn = redis.from_url(REDIS_URL)
-    topK = 5
-
     Search_query = st.text_input("Enter a search query below to discover scholarly papers")
 
     if st.button("Discover Scholarly Papers"):
         if Search_query is not None:
             query_vector = model.encode(Search_query).astype(np.float32).tobytes()
-            query = Query(f'*=>[KNN {topK} @vector $vec_param AS vector_score]').sort_by("vector_score").paging(0, topK).return_fields("paper_id", "title", "categories", "vector_score").dialect(2)
-
+            query = vector_query("KNN", 5)
             query_param = {"vec_param": query_vector}
             results =  redis_conn.ft(INDEX_NAME).search(query, query_params = query_param)
 

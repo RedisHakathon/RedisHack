@@ -64,16 +64,13 @@ if selected == "Topic Identification":
         """<h2 style='text-align: center; color: #EA047E;font-size:40px;margin-top:-50px;'>Topic Identification</h2>""",
         unsafe_allow_html=True,
     )
-    model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
-    redis_conn = redis.from_url(REDIS_URL)
-    topK = 1
 
     Search_query = st.text_input("Enter a text below to Identify which Schoarly Topic it Falls under")
 
     if st.button("Discover Scholarly Papers Topic"):
         if Search_query is not None:
             query_vector = model.encode(Search_query).astype(np.float32).tobytes()
-            query = Query(f'*=>[KNN {topK} @vector $vec_param AS vector_score]').sort_by("vector_score").paging(0, topK).return_fields("categories").dialect(2)
+            query = vector_query("KNN", 1)
 
             query_param = {"vec_param": query_vector}
             results =  redis_conn.ft(INDEX_NAME).search(query, query_params = query_param)
@@ -88,16 +85,12 @@ if selected == "Question & Answering":
         unsafe_allow_html=True,
     )
 
-    model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
-    redis_conn = redis.from_url(REDIS_URL)
-    topK = 1
-
     Search_query = st.text_input("Enter your question")
 
     if st.button("Get an Answer"):
         if Search_query is not None:
             query_vector = model.encode(Search_query).astype(np.float32).tobytes()
-            query = Query(f'*=>[KNN {topK} @vector $vec_param AS vector_score]').sort_by("vector_score").paging(0, topK).return_fields("abstract").dialect(2)
+            query = vector_query("KNN", 1)
 
             query_param = {"vec_param": query_vector}
             results =  redis_conn.ft(INDEX_NAME).search(query, query_params = query_param)

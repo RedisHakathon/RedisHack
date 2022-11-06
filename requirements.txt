@@ -1,0 +1,7 @@
+numpy
+pandas
+redis
+sentence_transformers
+streamlit
+streamlit_option_menu
+transformers

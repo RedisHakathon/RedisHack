@@ -3,7 +3,7 @@ from streamlit_option_menu import option_menu
 from sentence_transformers import SentenceTransformer
 import numpy as np
 import redis
-import config
+#import config
 from redis.commands.search.query import Query
 from transformers import pipeline
 
@@ -17,6 +17,8 @@ with st.sidebar:
         default_index=0,  # optional
     )
 
+REDIS_URL = f"redis://:{st.secrets.redis.REDIS_PASSWORD}@{st.secrets.redis.REDIS_HOST}:{st.secrets.redis.REDIS_PORT}/{st.secrets.redis.REDIS_DB}"
+INDEX_NAME = "index"
 @st.cache(allow_output_mutation=True)
 def load_qa_model():
     model = pipeline("question-answering")
@@ -34,7 +36,7 @@ if selected == "Paper Recommendation":
     )
 
     model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
-    redis_conn = redis.from_url(config.REDIS_URL)
+    redis_conn = redis.from_url(REDIS_URL)
     topK = 5
 
     Search_query = st.text_input("Enter a search query below to discover scholarly papers")
@@ -45,7 +47,7 @@ if selected == "Paper Recommendation":
             query = Query(f'*=>[KNN {topK} @vector $vec_param AS vector_score]').sort_by("vector_score").paging(0, topK).return_fields("paper_id", "title", "categories", "vector_score").dialect(2)
 
             query_param = {"vec_param": query_vector}
-            results =  redis_conn.ft(config.INDEX_NAME).search(query, query_params = query_param)
+            results =  redis_conn.ft(INDEX_NAME).search(query, query_params = query_param)
 
             for p in results.docs:
                 p.title           
@@ -57,7 +59,7 @@ if selected == "Topic Identification":
         unsafe_allow_html=True,
     )
     model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
-    redis_conn = redis.from_url(config.REDIS_URL)
+    redis_conn = redis.from_url(REDIS_URL)
     topK = 1
 
     Search_query = st.text_input("Enter a text below to Identify which Schoarly Topic it Falls under")
@@ -68,7 +70,7 @@ if selected == "Topic Identification":
             query = Query(f'*=>[KNN {topK} @vector $vec_param AS vector_score]').sort_by("vector_score").paging(0, topK).return_fields("categories").dialect(2)
 
             query_param = {"vec_param": query_vector}
-            results =  redis_conn.ft(config.INDEX_NAME).search(query, query_params = query_param)
+            results =  redis_conn.ft(INDEX_NAME).search(query, query_params = query_param)
 
             for p in results.docs:
                 p.categories
@@ -81,7 +83,7 @@ if selected == "Question & Answering":
     )
 
     model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
-    redis_conn = redis.from_url(config.REDIS_URL)
+    redis_conn = redis.from_url(REDIS_URL)
     topK = 1
 
     Search_query = st.text_input("Enter your question")
@@ -92,7 +94,7 @@ if selected == "Question & Answering":
             query = Query(f'*=>[KNN {topK} @vector $vec_param AS vector_score]').sort_by("vector_score").paging(0, topK).return_fields("abstract").dialect(2)
 
             query_param = {"vec_param": query_vector}
-            results =  redis_conn.ft(config.INDEX_NAME).search(query, query_params = query_param)
+            results =  redis_conn.ft(INDEX_NAME).search(query, query_params = query_param)
             qa = load_qa_model()
 
             for p in results.docs:

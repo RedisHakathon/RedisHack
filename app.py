@@ -19,10 +19,15 @@ with st.sidebar:
 
 REDIS_URL = f"redis://:{st.secrets.redis.REDIS_PASSWORD}@{st.secrets.redis.REDIS_HOST}:{st.secrets.redis.REDIS_PORT}/{st.secrets.redis.REDIS_DB}"
 INDEX_NAME = "index"
-model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
 redis_conn = redis.from_url(REDIS_URL)
 
 
+@st.cache(allow_output_mutation=True)
+def transformer():
+    model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
+    return model
+
+@st.cache(allow_output_mutation=True)
 def vector_query(search_type,number_of_results) -> Query:
     base_query = f'*=>[{search_type} {number_of_results} @vector $vec_param AS vector_score]'
     return Query(base_query)\
@@ -70,6 +75,7 @@ if selected == "Topic Identification":
 
     if st.button("Discover Scholarly Papers Topic"):
         if Search_query is not None:
+            model = transformer()
             query_vector = model.encode(Search_query).astype(np.float32).tobytes()
             query = vector_query("KNN", 1)
             query_param = {"vec_param": query_vector}
@@ -89,6 +95,7 @@ if selected == "Question & Answering":
 
     if st.button("Get an Answer"):
         if Search_query is not None:
+            model = transformer()
             query_vector = model.encode(Search_query).astype(np.float32).tobytes()
             query = vector_query("KNN", 1)
             query_param = {"vec_param": query_vector}

@@ -1,13 +1,11 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
-import requests
 from sentence_transformers import SentenceTransformer
 import numpy as np
-import redis.asyncio as redis
+import redis
 import config
 from redis.commands.search.query import Query
-from redis.commands.search.result import Result
-#from embeddings import model
+
 
 
 with st.sidebar:
@@ -36,21 +34,23 @@ if selected == "Paper Recommendation":
     redis_conn = redis.from_url(config.REDIS_URL)
     topK = 5
 
-    paragraph_slot = st.empty()
-    question = st.text_input("Enter a search query below to discover scholarly papers")
+    Search_query = st.text_input("Enter a search query below to discover scholarly papers")
 
 
     if st.button("Discover Scholarly Papers"):
-        if question is not None:
-            query_vector = model.encode(question).astype(np.float32).tobytes()
-            q = Query(f'*=>[KNN {topK} @vector $vec_param AS vector_score]').sort_by("vector_score").paging(0, topK).return_fields("title", "vector_score").dialect(2)
+        if Search_query is not None:
+            query_vector = model.encode(Search_query).astype(np.float32).tobytes()
+            query = Query(f'*=>[KNN {topK} @vector $vec_param AS vector_score]').sort_by("vector_score").paging(0, topK).return_fields("paper_id", "title", "categories", "vector_score").dialect(2)
 
-            params_dict = {"vec_param": query_vector}
 
-            results = redis_conn.ft().search(q, query_params = params_dict)
+            query_param = {"vec_param": query_vector}
+            results =  redis_conn.ft(config.INDEX_NAME).search(query, query_params = query_param)
 
-            st.success(results)
+            for p in results.docs:
+                p.title
 
+             
+        
 
 if selected == "Question & Answering":
     st.markdown(
@@ -62,3 +62,22 @@ if selected == "Topic Identification":
         """<h2 style='text-align: center; color: purple;font-size:40px;margin-top:-50px;'>Topic Identification</h2>""",
         unsafe_allow_html=True,
     )
+    model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
+    redis_conn = redis.from_url(config.REDIS_URL)
+    topK = 5
+
+    Search_query = st.text_input("Enter a text below to Identify which Schoarly Topic it Falls under")
+
+
+    if st.button("Discover Scholarly Papers Topic"):
+        if Search_query is not None:
+            query_vector = model.encode(Search_query).astype(np.float32).tobytes()
+            query = Query(f'*=>[KNN {topK} @vector $vec_param AS vector_score]').sort_by("vector_score").paging(0, topK).return_fields("categories").dialect(2)
+
+
+            query_param = {"vec_param": query_vector}
+            results =  redis_conn.ft(config.INDEX_NAME).search(query, query_params = query_param)
+
+            for p in results.docs:
+                p.categories
+

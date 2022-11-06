@@ -44,7 +44,6 @@ if selected == "Paper Recommendation":
             query_vector = model.encode(Search_query).astype(np.float32).tobytes()
             query = Query(f'*=>[KNN {topK} @vector $vec_param AS vector_score]').sort_by("vector_score").paging(0, topK).return_fields("paper_id", "title", "categories", "vector_score").dialect(2)
 
-
             query_param = {"vec_param": query_vector}
             results =  redis_conn.ft(config.INDEX_NAME).search(query, query_params = query_param)
 
@@ -63,12 +62,10 @@ if selected == "Topic Identification":
 
     Search_query = st.text_input("Enter a text below to Identify which Schoarly Topic it Falls under")
 
-
     if st.button("Discover Scholarly Papers Topic"):
         if Search_query is not None:
             query_vector = model.encode(Search_query).astype(np.float32).tobytes()
             query = Query(f'*=>[KNN {topK} @vector $vec_param AS vector_score]').sort_by("vector_score").paging(0, topK).return_fields("categories").dialect(2)
-
 
             query_param = {"vec_param": query_vector}
             results =  redis_conn.ft(config.INDEX_NAME).search(query, query_params = query_param)
@@ -89,12 +86,10 @@ if selected == "Question & Answering":
 
     Search_query = st.text_input("Enter your question")
 
-
     if st.button("Get an Answer"):
         if Search_query is not None:
             query_vector = model.encode(Search_query).astype(np.float32).tobytes()
             query = Query(f'*=>[KNN {topK} @vector $vec_param AS vector_score]').sort_by("vector_score").paging(0, topK).return_fields("abstract").dialect(2)
-
 
             query_param = {"vec_param": query_vector}
             results =  redis_conn.ft(config.INDEX_NAME).search(query, query_params = query_param)

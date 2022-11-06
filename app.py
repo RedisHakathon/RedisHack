@@ -17,6 +17,7 @@ with st.sidebar:
         default_index=0,  # optional
     )
 
+
 REDIS_URL = f"redis://:{st.secrets.redis.REDIS_PASSWORD}@{st.secrets.redis.REDIS_HOST}:{st.secrets.redis.REDIS_PORT}/{st.secrets.redis.REDIS_DB}"
 INDEX_NAME = "index"
 redis_conn = redis.from_url(REDIS_URL)
@@ -26,6 +27,7 @@ redis_conn = redis.from_url(REDIS_URL)
 def transformer():
     model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
     return model
+
 
 @st.cache(allow_output_mutation=True)
 def vector_query(search_type,number_of_results) -> Query:
@@ -56,7 +58,8 @@ if selected == "Paper Recommendation":
     Search_query = st.text_input("Enter a search query below to discover scholarly papers")
     if st.button("Discover Scholarly Papers"):
         if Search_query is not None:
-            query_vector = model.encode(Search_query).astype(np.float32).tobytes()
+            emb = transformer()
+            query_vector = emb.encode(Search_query).astype(np.float32).tobytes()
             query = vector_query("KNN", 5)
             query_param = {"vec_param": query_vector}
             results =  redis_conn.ft(INDEX_NAME).search(query, query_params = query_param)
@@ -75,8 +78,8 @@ if selected == "Topic Identification":
 
     if st.button("Discover Scholarly Papers Topic"):
         if Search_query is not None:
-            model = transformer()
-            query_vector = model.encode(Search_query).astype(np.float32).tobytes()
+            emb = transformer()
+            query_vector = emb.encode(Search_query).astype(np.float32).tobytes()
             query = vector_query("KNN", 1)
             query_param = {"vec_param": query_vector}
             results =  redis_conn.ft(INDEX_NAME).search(query, query_params = query_param)
@@ -95,8 +98,8 @@ if selected == "Question & Answering":
 
     if st.button("Get an Answer"):
         if Search_query is not None:
-            model = transformer()
-            query_vector = model.encode(Search_query).astype(np.float32).tobytes()
+            emb = transformer()
+            query_vector = emb.encode(Search_query).astype(np.float32).tobytes()
             query = vector_query("KNN", 1)
             query_param = {"vec_param": query_vector}
             results =  redis_conn.ft(INDEX_NAME).search(query, query_params = query_param)

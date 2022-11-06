@@ -22,6 +22,7 @@ INDEX_NAME = "index"
 model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
 redis_conn = redis.from_url(REDIS_URL)
 
+
 def vector_query(search_type,number_of_results) -> Query:
     base_query = f'*=>[{search_type} {number_of_results} @vector $vec_param AS vector_score]'
     return Query(base_query)\
@@ -30,10 +31,12 @@ def vector_query(search_type,number_of_results) -> Query:
         .return_fields("title", "categories", "abstract")\
         .dialect(2)
 
+
 @st.cache(allow_output_mutation=True)
 def load_qa_model():
     model = pipeline("question-answering")
     return model
+
 
 if selected == "Paper Recommendation":
     st.markdown(
@@ -45,19 +48,17 @@ if selected == "Paper Recommendation":
 </h6>""",
         unsafe_allow_html=True,
     )
-
     Search_query = st.text_input("Enter a search query below to discover scholarly papers")
-
     if st.button("Discover Scholarly Papers"):
         if Search_query is not None:
             query_vector = model.encode(Search_query).astype(np.float32).tobytes()
             query = vector_query("KNN", 5)
             query_param = {"vec_param": query_vector}
             results =  redis_conn.ft(INDEX_NAME).search(query, query_params = query_param)
-
+            
             for p in results.docs:
                 p.title           
-        
+   
 
 if selected == "Topic Identification":
     st.markdown(
@@ -71,10 +72,9 @@ if selected == "Topic Identification":
         if Search_query is not None:
             query_vector = model.encode(Search_query).astype(np.float32).tobytes()
             query = vector_query("KNN", 1)
-
             query_param = {"vec_param": query_vector}
             results =  redis_conn.ft(INDEX_NAME).search(query, query_params = query_param)
-
+            
             for p in results.docs:
                 p.categories
 
@@ -91,7 +91,6 @@ if selected == "Question & Answering":
         if Search_query is not None:
             query_vector = model.encode(Search_query).astype(np.float32).tobytes()
             query = vector_query("KNN", 1)
-
             query_param = {"vec_param": query_vector}
             results =  redis_conn.ft(INDEX_NAME).search(query, query_params = query_param)
             qa = load_qa_model()

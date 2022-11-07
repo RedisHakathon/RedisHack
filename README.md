@@ -110,7 +110,7 @@ pip install -r requirements.txt
 ---
 
 ```bash
-streamlit run dashboard/app.py
+streamlit run app.py
 ```
 
 ---

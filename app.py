@@ -67,12 +67,12 @@ if selected == "Paper Recommendation":
             for p in results.docs:
                 st.markdown(
                     f""" <div class="card border-success mb-3" style="max-width:40rem;position: relative; background-color:#ccc; border-radius:5px;">   
-                    <div class="card-header bg-transparent border-success" style="color:#000000; text-align:left;color: #000000;margin:10px;"><b>{p.title}</b></div> 
+                    <div class="card-header bg-transparent border-success" style="color:#000000; text-align:center;color: #000000;"><b>{p.title}</b></div> 
                     <div class="card-body text-success">
-                      <p class="card-title" style="color:#000000; margin:20px;margin-top:-5px"><i>{p.authors}:({p.year})</i></p>
+                      <p class="card-title" style="color:#000000;text-align:center; margin:10px;margin-top:-5px"><i>{p.authors}:({p.year})</i></p>
                     </div>
                     <div class="card-context text-success">
-                      <p class="card-context" style="color:#000000;font-size:6px; margin:20px;margin-top:-5px"><b>Abstract.</b>{p.abstract}</p>
+                      <p class="card-context" style="color:#000000;font-size:10px; margin:20px;margin-top:-5px"><b>Abstract.</b>{p.abstract}</p>
                     </div>
                     </div> """,
                     unsafe_allow_html=True,

@@ -17,7 +17,7 @@
   
 This is the code accompanying [this post](https://medium.com/@aaomar/arxiv-search-hackathon-with-redis-saturncloud-streamlit-d65ab0e0be2c). You can try the app [here](https://redishakathon-arxiv-search-hackathon-with-redis-satu-app-txqqb0.streamlit.app/). Built using Streamlit and deployed on Streamlit Cloud
 
-**Note**: Streamlit app is deployed with two pre-trained models, which is quite huge thus the use of streamlit caching to enhance performance. However, there's a slug with the appilication with affect on traffic. Thanks to Redis & Saturn Cloud who helped us with not only resource but also 24/7 Support.  
+**Note**: Streamlit app is deployed with two pre-trained models, which is quite huge thus the use of streamlit caching to enhance performance. However, there's a slug with the appilication on the first spin. We thank Redis & Saturn Cloud folks who helped us with not only resources but also 24/7 Support.  
   
     
     
@@ -88,4 +88,32 @@ FT.INFO <index_name>
 |:---------|
 | You Can get a free Redis Enterprise, see the [Try for free](https://redis.com/try-free/). |  
 
+
+## 💻 Streamlit App 
+
+The `project` ships with a `app.py` script that uses
+[`streamlit`](https://streamlit.io/) as a UI for interacting with your redis database.  
+
+```bash
+git clone https://github.com/RedisHakathon/arXiv-search-hackathon-with-redis-saturnCloud
+```  
+  
+  ### install requirements    
+``` 
+pip install -r requirements.txt 
+```  
+
+<details>
+
+<summary> Run streamlit locally </summary>
+
+---
+
+```bash
+streamlit run dashboard/app.py
+```
+
+---
+
+</details>    
 

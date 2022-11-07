@@ -6,7 +6,7 @@
         Mlops Engineering Lab
     </h1>
     <p align="center">
-        Open Source Repository for MLops Engineering Lab Hackathon
+        Open Source Repository for MLOps Engineering Lab Hackathon
     </p>
     <p align="center">
         <a href="https://go.mlops.community/slack">
@@ -17,7 +17,7 @@
   
 This is the code accompanying [this post](https://medium.com/@aaomar/arxiv-search-hackathon-with-redis-saturncloud-streamlit-d65ab0e0be2c). You can try the app [here](https://redishakathon-arxiv-search-hackathon-with-redis-satu-app-txqqb0.streamlit.app/). Built using Streamlit and deployed on Streamlit Cloud
 
-**Note**: Streamlit app is deployed with two pre-trained models, which is quite huge thus the use of streamlit caching to enhance performance. However, there's a slug with the appilication on the first spin. We thank Redis & Saturn Cloud folks who helped us with not only resources but also 24/7 Support.  
+**Note**: Streamlit app is deployed with two pre-trained models, which is quite huge thus the use of streamlit caching to enhance performance. However, there's a slug with the application on the first spin. We thank Redis & Saturn Cloud folks who helped us with not only resources but also 24/7 Support.  
   
     
     

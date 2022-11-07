@@ -73,16 +73,7 @@ if selected == "Paper Recommendation":
                     </div>
                     </div> """,
                     unsafe_allow_html=True,
-                    )
-
-                st.markdown(    
-                    f""" 
-                   <p style="color:#000000; margin:20px;;margin-top:-5px"><i>{p.auth}:({p.year})</i></p> 
-                    
-                    """,
-
-                    unsafe_allow_html=True,
-                )         
+                    )       
    
 
 if selected == "Topic Identification":

@@ -65,17 +65,18 @@ if selected == "Paper Recommendation":
             results =  redis_conn.ft(INDEX_NAME).search(query, query_params = query_param)
             
             for p in results.docs:
-                st.markdown(
+                st.markdown(    
                     f""" <div class="card border-success mb-3" style="max-width:30rem;position: relative; background-color:#ccc; border-radius:10px;">   
-                    <div class="card-header bg-transparent border-success" style="color:#000000; text-align:left;color: #2146C7;margin:10px;"><u>{p.title}</u></div>
+                    <div class="card-header bg-transparent border-success" style="color:#000000; text-align:left;color: #2146C7;margin:10px;"><u>{p.titles}</u></div>
                     <div class="card-body text-success">
-                    <p class="card-title" style="color:#000000; margin:20px;;margin-top:-5px"><i>{p.authors}:({p.year})</i></p>
-    
+                    <p class="card-title" style="color:#000000; margin:20px;;margin-top:-5px"><i>{p.auth}:({p.year})</i></p>
+
                     </div>
-                    
-                    </div> """,
+
+                    </div>""",
+
                     unsafe_allow_html=True,
-                )           
+                )         
    
 
 if selected == "Topic Identification":
@@ -123,7 +124,6 @@ if selected == "Question & Answering":
             for p in results.docs:
                 sentence  = p.abstract
                 answers = qa(question=Search_query, context=sentence)
-                st.write(answers['answer'])
                 st.markdown(
                     f""" <div class="card border-success mb-3" style="max-width:30rem;position: relative; background-color:#ccc; border-radius:10px;">   
                     <div class="card-header bg-transparent border-success" style="color:#000000; text-align:left;color: #000000;margin:10px;"><b>{answers['answer']}</b></div> 

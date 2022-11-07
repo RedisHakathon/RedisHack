@@ -22,7 +22,7 @@ This is the code accompanying [this post](https://medium.com/@aaomar/arxiv-searc
     
     
   
-  ![App](https://github.com/RedisHakathon/arXiv-search-hackathon-with-redis-saturnCloud/blob/main/resource/StreamlitApp.gif)
+![App](https://github.com/RedisHakathon/arXiv-search-hackathon-with-redis-saturnCloud/blob/main/resource/StreamlitApp.gif)
 
 
 

@@ -35,7 +35,7 @@ def vector_query(search_type,number_of_results) -> Query:
     return Query(base_query)\
         .sort_by("vector_score")\
         .paging(0, number_of_results)\
-        .return_fields("title", "categories", "abstract")\
+        .return_fields("title", "categories", "abstract", "authors", "year")\
         .dialect(2)
 
 
@@ -65,7 +65,9 @@ if selected == "Paper Recommendation":
             results =  redis_conn.ft(INDEX_NAME).search(query, query_params = query_param)
             
             for p in results.docs:
-                p.title           
+                p.title
+                p.authors
+                p.year
    
 
 if selected == "Topic Identification":

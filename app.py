@@ -3,7 +3,6 @@ from streamlit_option_menu import option_menu
 from sentence_transformers import SentenceTransformer
 import numpy as np
 import redis
-#import config
 from redis.commands.search.query import Query
 from transformers import pipeline
 
@@ -17,18 +16,18 @@ with st.sidebar:
         default_index=0,  # optional
     )
 
-
+#redis credentials for streamlit cloud env variables
 REDIS_URL = f"redis://:{st.secrets.redis.REDIS_PASSWORD}@{st.secrets.redis.REDIS_HOST}:{st.secrets.redis.REDIS_PORT}/{st.secrets.redis.REDIS_DB}"
 INDEX_NAME = "index"
 redis_conn = redis.from_url(REDIS_URL)
 
-
+#Huggingface pre-trained model for text function
 @st.cache(allow_output_mutation=True)
 def transformer():
     model = SentenceTransformer('sentence-transformers/all-mpnet-base-v2')
     return model
 
-
+#RediSearch query function
 @st.cache(allow_output_mutation=True)
 def vector_query(search_type,number_of_results) -> Query:
     base_query = f'*=>[{search_type} {number_of_results} @vector $vec_param AS vector_score]'
@@ -38,7 +37,7 @@ def vector_query(search_type,number_of_results) -> Query:
         .return_fields("title", "categories", "abstract", "authors", "year")\
         .dialect(2)
 
-
+#Pre-trained Huggingface model for question & answering
 @st.cache(allow_output_mutation=True)
 def load_qa_model():
     model = pipeline("question-answering")

@@ -65,6 +65,14 @@ if selected == "Paper Recommendation":
             results =  redis_conn.ft(INDEX_NAME).search(query, query_params = query_param)
             
             for p in results.docs:
+                titles = p.title
+                p.authors
+                p.year
+
+                st.markdown(
+                    f"""<h1 style='color:#FF0080;'>You're Listening to : <span style='color:#151E3D;'>{titles}</span></h1>""",
+                    unsafe_allow_html=True,
+                )
                 p.title
                 p.authors
                 p.year
